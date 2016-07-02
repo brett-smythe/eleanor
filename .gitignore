@@ -63,3 +63,6 @@ target/
 
 #Vim
 *.swp
+
+# Ignore logs
+logs/
