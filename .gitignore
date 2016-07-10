@@ -66,3 +66,6 @@ target/
 
 # Ignore logs
 logs/
+
+# Ignore deb build
+debian/*
