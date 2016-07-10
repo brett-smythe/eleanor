@@ -19,6 +19,8 @@ setup(
     description='API for accumulated social data',
     author='Brett Smythe',
     author_email='smythebrett@gmail.com',
+    maintainer='Brett Smythe',
+    maintainer_email='smythebrett@gmail.com',
     packages=find_packages(),
     install_reqs=reqs,
     entry_points={
