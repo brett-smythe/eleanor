@@ -1,0 +1,47 @@
+<eleanorhost>/add-tweet-data
+
+No retweet data:
+
+{
+    "user_name": "NASA",
+    "tweet_id": "754068250401599488",
+    "url": "https://twitter.com/NASA/status/754068250401599488",
+    "tweet_text": "Spacecraft somersault! Engineers instructed our solar observatory to roll 360°. Take a spin: http://go.nasa.gov/29Ee2AA",
+    "tweet_created": "Wed Aug 27 13:08:45 +0000 2008",
+    "is_retweet": "False",
+    "user_mentions": ["other", "user", "names"],
+    "hashtags": ["firsthashtag", "secondhashtag"],
+    "tweet_urls": ["http://someurls.com"],
+    "retweet_data" : {}
+}
+
+
+Retweet data:
+
+{
+    "user_name": "NASA",
+    "tweet_id": "754068250401599488",
+    "url": "https://twitter.com/NASA/status/754068250401599488",
+    "tweet_text": "Spacecraft somersault! Engineers instructed our solar observatory to roll 360°. Take a spin: http://go.nasa.gov/29Ee2AA",
+    "tweet_created": "Wed Aug 27 13:08:45 +0000 2008",
+    "is_retweet": "True",
+    "user_mentions": ["other", "user", "names"],
+    "hashtags": ["firsthashtag", "secondhashtag"],
+    "tweet_urls": ["http://someurls.com"],
+    "retweet_data" : {
+        "user_name": "NASA",
+        "tweet_id": "754068250401599488",
+        "url": "https://twitter.com/NASA/status/754068250401599488",
+        "tweet_text": "Spacecraft somersault! Engineers instructed our solar observatory to roll 360°. Take a spin: http://go.nasa.gov/29Ee2AA",
+        "tweet_created": "Wed Aug 27 13:08:45 +0000 2008",
+        "is_retweet": "False",
+        "user_mentions": ["other", "user", "names"],
+        "hashtags": ["firsthashtag", "secondhashtag"],
+        "tweet_urls": ["http://someurls.com"]
+    }
+}
+
+
+# ON GETTING FROM ELEANOR
+# Datetimes after being consumed are converted and used in ISO 8601
+"tweet_created": "2016-07-21T01:18:57+00:00"

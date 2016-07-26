@@ -69,3 +69,6 @@ logs/
 
 # Ignore deb build
 debian/*
+
+# Ignore dev auth files
+eleanor_local_auth.cfg
