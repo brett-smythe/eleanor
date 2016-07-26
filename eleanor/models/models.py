@@ -1,3 +1,4 @@
+"""Base model that all text sources should share"""
 import enum
 
 from sqlalchemy import Column, Integer, String, Text, DateTime, Enum
@@ -7,10 +8,12 @@ from base import Base
 
 
 class AllowedSources(enum.Enum):
+    """Enum of allowed sources for eleanor"""
     twitter = 'twitter'
 
 
 class TextSource(Base):
+    """Base model that all text sources will use"""
     __tablename__ = 'text_source'
 
     id = Column(Integer, primary_key=True)
@@ -29,4 +32,3 @@ class TextSource(Base):
         cascade='all, delete, delete-orphan',
         uselist=False
     )
-

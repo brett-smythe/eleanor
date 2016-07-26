@@ -1,3 +1,4 @@
+"""Setuptools for eleanor service"""
 from setuptools import setup, find_packages
 
 reqs = []
@@ -10,7 +11,7 @@ with open('requirements.txt') as inf:
 
 setup(
     name='eleanor',
-    version='0.1',
+    version='0.2',
     description='API for accumulated social data',
     author='Brett Smythe',
     author_email='smythebrett@gmail.com',
@@ -20,8 +21,7 @@ setup(
     install_reqs=reqs,
     entry_points={
         'console_scripts': [
-           'eleanor=eleanor.main:main' 
-        ]   
+            'eleanor=eleanor.main:main'
+        ]
     }
 )
-

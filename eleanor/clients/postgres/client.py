@@ -1,3 +1,4 @@
+"""Handles eleanor's connection to postgres"""
 import os.path
 
 import ConfigParser
@@ -26,16 +27,21 @@ engine = create_engine('postgresql://{0}:{1}@{2}/{3}'.format(
 
 
 class GetDBSession(object):
+    """This class acts as a context manager for postgres connections"""
+
+    def __init__(self):
+        Session = sessionmaker(bind=engine)
+        self.session = Session()
 
     def __enter__(self):
-        Session = sessionmaker(bind = engine)
-        self.session = Session()
         return self.session
 
     def __exit__(self, exc_type, exc_value, traceback):
         # the above args should be == None if there are no exceptions so:
-        if ((exc_type != None) and (exc_value != None) and (traceback != None)):
-            # TODO add logging here
+        if (
+                (exc_type is not None) and
+                (exc_value is not None) and
+                (traceback is not None)
+        ):
             self.session.rollback()
         self.session.close()
-

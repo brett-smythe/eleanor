@@ -1,5 +1,6 @@
+"""Models for twitter text sources"""
 from sqlalchemy import (
-    Column, Integer, String, Text, DateTime, ForeignKey, BigInteger, Boolean
+    Column, Integer, String, ForeignKey, BigInteger, Boolean
 )
 
 from sqlalchemy.orm import relationship
@@ -8,6 +9,7 @@ from base import Base
 
 
 class TwitterSource(Base):
+    """Base model for twitter text sources"""
     __tablename__ = 'twitter_source'
 
     id = Column(Integer, primary_key=True)
@@ -42,6 +44,7 @@ class TwitterSource(Base):
 
 
 class TweetHashtags(Base):
+    """Model for hashtags within a tweet"""
     __tablename__ = 'tweet_hashtags'
 
     id = Column(Integer, primary_key=True)
@@ -54,6 +57,7 @@ class TweetHashtags(Base):
 
 
 class TweetURLs(Base):
+    """Model for urls within a tweet"""
     __tablename__ = 'tweet_urls'
 
     id = Column(Integer, primary_key=True)
@@ -66,6 +70,7 @@ class TweetURLs(Base):
 
 
 class TweetUserMentions(Base):
+    """Model for users mentioned within a tweet"""
     __tablename__ = 'tweet_user_mentions'
 
     id = Column(Integer, primary_key=True)
@@ -78,8 +83,9 @@ class TweetUserMentions(Base):
 
 
 class PolledTimelineUsers(Base):
+    """Model containing twitter users that are being polled by aquatic services
+    """
     __tablename__ = 'polled_timeline_users'
 
     id = Column(Integer, primary_key=True)
     user_name = Column(String)
-
