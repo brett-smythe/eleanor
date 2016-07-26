@@ -20,7 +20,7 @@ def hello():
 
 
 @web_app.route(
-    '/twitter-tl-user', methods=['POST', 'GET'], strict_slashes=False
+    '/twitter-tl-users', methods=['POST', 'GET'], strict_slashes=False
 )
 def tracked_twitter_tl_user():
     """Get or add new twitter users to be polled"""
@@ -28,20 +28,21 @@ def tracked_twitter_tl_user():
         logger.debug('Returning tracked twitter timeline users')
         tracked_users = pg_utils.get_tracked_twitter_tl_users()
         return_data = {
-            'tracked_twitter_usernames': []
+            'twitter_usernames': []
         }
         return_data['tracked_twitter_usernames'] = tracked_users
         return json.dumps(return_data)
     elif request.method == 'POST':
         if request.headers['Content-Type'] == 'application/json':
             req_data = json.loads(request.get_json())
-            request_user = req_data['username']
+            request_users = req_data['twitter_usernames']
             logger.info(
-                'Adding user: %s to tracked twitter timline users',
-                request_user
+                'Adding users: %s to tracked twitter timline users',
+                request_users
             )
-            if not pg_utils.is_twitter_user_in_interns(request_user):
-                pg_utils.begin_tracking_twitter_user(req_data['username'])
+            for username in request_users:
+                if not pg_utils.is_twitter_user_in_interns(username):
+                    pg_utils.begin_tracking_twitter_user(username)
 
 
 @web_app.route('/add-tweet-data', methods=['POST'], strict_slashes=False)
@@ -70,8 +71,7 @@ def get_last_tweet_id(username):
     """
     last_tweet_id = pg_utils.last_twitter_user_entry_id(username)
     if last_tweet_id:
-        last_return_key = '{0}_last_tweet_id'.format(username)
-        return_data = {last_return_key: last_tweet_id}
+        return_data = {'last_tweet_id': last_tweet_id}
         return jsonify(return_data)
     else:
         abort(204)
