@@ -1,5 +1,5 @@
 """Handles eleanor's connection to postgres"""
-import os.path
+import getpass
 
 import ConfigParser
 
@@ -8,13 +8,11 @@ from sqlalchemy.orm import sessionmaker
 
 
 config = ConfigParser.RawConfigParser()
-conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
-if os.path.isfile(conf_file):
-    config.read(conf_file)
+if getpass.getuser() != 'eleanor':
+    conf_file = '/home/brett/dev/eleanor/eleanor/eleanor_local_auth.cfg'
 else:
-    config.read(
-        '/home/brett/dev/eleanor/eleanor/eleanor_local_auth.cfg'
-    )
+    conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
+config.read(conf_file)
 
 pg_user_name = config.get('Postgres', 'pg_uname')
 pg_password = config.get('Postgres', 'pg_pwd')

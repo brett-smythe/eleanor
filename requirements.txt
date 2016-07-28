@@ -2,6 +2,7 @@ astroid==1.4.8
 backports.functools-lru-cache==1.2.1
 click==6.6
 configparser==3.5.0
+-e git+git@github.com:brett-smythe/eleanor.git@a6f24d21c19369fa3afc333885193b06ace909e5#egg=eleanor
 enum34==1.1.6
 Flask==0.11.1
 isort==4.2.5
@@ -10,6 +11,7 @@ Jinja2==2.8
 lazy-object-proxy==1.2.2
 MarkupSafe==0.23
 mccabe==0.5.1
+psycopg2==2.6.2
 python-dateutil==2.5.3
 six==1.10.0
 SQLAlchemy==1.0.14
