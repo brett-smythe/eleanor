@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 config = ConfigParser.RawConfigParser()
-conf_file = '/etc/opt/eleanor_auth.cfg'
+conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
 if os.path.isfile(conf_file):
     config.read(conf_file)
 else:
