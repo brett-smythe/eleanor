@@ -1,5 +1,5 @@
 """Web app module for eleanor service"""
-from flask import Flask, json, request, jsonify, abort
+from flask import Flask, json, request, abort, Response
 
 from utils import get_logger
 
@@ -30,8 +30,14 @@ def tracked_twitter_tl_user():
         return_data = {
             'twitter_usernames': []
         }
-        return_data['tracked_twitter_usernames'] = tracked_users
-        return json.dumps(return_data)
+        return_data['twitter_usernames'] = tracked_users
+
+        resp = Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps(return_data)
+        )
+        return resp
     elif request.method == 'POST':
         if request.headers['Content-Type'] == 'application/json':
             req_data = json.loads(request.get_json())
@@ -59,7 +65,12 @@ def get_tweet_from_id(tweet_id):
     """
     tweet_data = pg_utils.get_tweet_data_by_id(tweet_id)
     if tweet_data:
-        return jsonify(tweet_data)
+        resp = Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps(tweet_data)
+        )
+        return resp
     else:
         abort(204)
 
@@ -72,7 +83,12 @@ def get_last_tweet_id(username):
     last_tweet_id = pg_utils.last_twitter_user_entry_id(username)
     if last_tweet_id:
         return_data = {'last_tweet_id': last_tweet_id}
-        return jsonify(return_data)
+        resp = Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps(return_data)
+        )
+        return resp
     else:
         abort(204)
 
