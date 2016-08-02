@@ -1,6 +1,7 @@
 """Utilities for the eleanor service"""
 
 import json
+from datetime import datetime
 
 from dateutil.parser import parse as date_parse
 
@@ -15,12 +16,12 @@ from eleanor.clients.postgres.client import GetDBSession
 logger = get_logger(__name__)
 
 
-def get_string_from_datetime(datetime):
+def get_string_from_datetime(dt):
     """When given a datetime object return a ISO 8601 string representation of
     the datetime
     """
     dt_format = "%Y-%m-%dT%H:%M:%S+%z"
-    return datetime.strftime(dt_format)
+    return dt.strftime(dt_format)
 
 
 def get_tweet_data_by_id(tweet_id):
@@ -97,7 +98,7 @@ def insert_text_data(data_source, source_url, text, time_posted, session):
     time_posted -- either a datetime object or a datetime string
     session -- active db session
     """
-    if not isinstance(time_posted, time_posted):
+    if not isinstance(time_posted, datetime):
         time_posted = date_parse(time_posted)
 
     logger.debug('Inserting text data into postgres')
@@ -235,6 +236,7 @@ def add_user_mentions(tweet_data, tweetModel):
 
 def insert_retweet_data(retweet_data):
     """Inserts retweet data"""
+    print retweet_data
     insert_tweet_data(retweet_data['retweet_data'])
     with GetDBSession() as db_session:
         retweet_id = int(retweet_data['tweet_id'])
@@ -294,7 +296,7 @@ def insert_non_retweet_data(tweet_data):
             models.AllowedSources.twitter.name,
             tweet_data['url'],
             tweet_data['tweet_text'],
-            date_parse('tweet_created'),
+            date_parse(tweet_data['tweet_created']),
             db_session
         )
 
@@ -341,8 +343,9 @@ def insert_tweet_data(tweet_data):
     appropriately
     """
     if not isinstance(tweet_data, dict):
-        tweet = json.loads(tweet_data)
-    if tweet['is_retweet']:
-        insert_retweet_data(tweet)
+        tweet_data = json.loads(tweet_data)
+    if tweet_data['is_retweet']:
+        print tweet_data
+        insert_retweet_data(tweet_data)
     else:
-        insert_non_retweet_data(tweet)
+        insert_non_retweet_data(tweet_data)

@@ -56,6 +56,7 @@ def add_tweet_data():
     """Add data pulled from a tweet"""
     tweet_data = request.get_json()
     pg_utils.insert_tweet_data(tweet_data)
+    return 200
 
 
 @web_app.route('/tweet/<tweet_id>', strict_slashes=False)
