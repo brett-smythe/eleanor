@@ -39,6 +39,10 @@ def tracked_twitter_tl_user():
         )
         return resp
     elif request.method == 'POST':
+        logger.debug('twitter-tl-users POST headers are: %s', request.headers)
+        logger.debug(
+            'twitter-tl-users POST request data: %s', request.get_json()
+        )
         for k, v in request.headers.items():
             if k.lower() == 'content-type':
                 if v.lower() == 'application/json':
