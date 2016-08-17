@@ -11,7 +11,7 @@ def get_logger(module_name):
     logger = logging.getLogger(module_name)
     logger.setLevel(logging.DEBUG)
     handler = logging.handlers.TimedRotatingFileHandler(
-        '/tmp/eleanor.log', 'midnight', 1, 0, 'utf-8', False, True
+        '/var/log/eleanor/eleanor.log', 'midnight', 1, 0, 'utf-8', False, True
     )
     formatter = logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
