@@ -49,7 +49,8 @@ def tracked_twitter_tl_user():
         for k, v in request.headers.items():
             if k.lower() == 'content-type':
                 if v.lower() == 'application/json':
-                    request_users = request.get_json()['twitter_usernames']
+                    request_data = json.loads(request.json)
+                    request_users = request_data['twitter_usernames']
                     logger.info(
                         'Adding users: %s to tracked twitter timline users',
                         request_users
