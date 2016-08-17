@@ -39,16 +39,18 @@ def tracked_twitter_tl_user():
         )
         return resp
     elif request.method == 'POST':
-        if request.headers['Content-Type'] == 'application/json':
-            req_data = json.loads(request.get_json())
-            request_users = req_data['twitter_usernames']
-            logger.info(
-                'Adding users: %s to tracked twitter timline users',
-                request_users
-            )
-            for username in request_users:
-                if not pg_utils.is_twitter_user_in_interns(username):
-                    pg_utils.begin_tracking_twitter_user(username)
+        for k, v in request.headers.items():
+            if k.lower() == 'content-type':
+                if v.lower() == 'application/json':
+                    req_data = json.loads(request.get_json())
+                    request_users = req_data['twitter_usernames']
+                    logger.info(
+                        'Adding users: %s to tracked twitter timline users',
+                        request_users
+                    )
+                    for username in request_users:
+                        if not pg_utils.is_twitter_user_in_interns(username):
+                            pg_utils.begin_tracking_twitter_user(username)
 
 
 @web_app.route('/add-tweet-data', methods=['POST'], strict_slashes=False)
