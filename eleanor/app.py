@@ -1,5 +1,5 @@
 """Web app module for eleanor service"""
-from flask import Flask, json, request, abort, Response
+from flask import Flask, json, request, Response
 
 from utils import get_logger
 
@@ -81,7 +81,10 @@ def get_tweet_from_id(tweet_id):
         )
         return resp
     else:
-        abort(204)
+        resp = Response(
+            status=204
+        )
+        return resp
 
 
 @web_app.route('/last-tweet-id/<username>', strict_slashes=False)
@@ -99,7 +102,10 @@ def get_last_tweet_id(username):
         )
         return resp
     else:
-        abort(204)
+        resp = Response(
+            status=204
+        )
+        return resp
 
 
 if __name__ == '__main__':
