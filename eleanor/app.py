@@ -43,6 +43,9 @@ def tracked_twitter_tl_user():
         logger.debug(
             'twitter-tl-users POST request data: %s', request
         )
+        logger.debug(
+            'twitter-tl-users POST json: %s', request.json
+        )
         for k, v in request.headers.items():
             if k.lower() == 'content-type':
                 if v.lower() == 'application/json':
