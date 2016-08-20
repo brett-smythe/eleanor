@@ -19,9 +19,12 @@ pg_password = config.get('Postgres', 'pg_pwd')
 pg_ip_address = config.get('Postgres', 'pg_ip_address')
 pg_db_name = config.get('Postgres', 'pg_db_name')
 
-engine = create_engine('postgresql://{0}:{1}@{2}/{3}'.format(
-    pg_user_name, pg_password, pg_ip_address, pg_db_name
-))
+engine = create_engine(
+    'postgresql://{0}:{1}@{2}/{3}'.format(
+        pg_user_name, pg_password, pg_ip_address, pg_db_name
+    ),
+    pool_size=25
+)
 
 
 class GetDBSession(object):
