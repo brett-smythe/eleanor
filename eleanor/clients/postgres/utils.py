@@ -236,10 +236,9 @@ def add_user_mentions(tweet_data, tweetModel):
 
 def insert_retweet_data(retweet_data):
     """Inserts retweet data"""
-    print retweet_data
     insert_tweet_data(retweet_data['retweet_data'])
     with GetDBSession() as db_session:
-        retweet_id = int(retweet_data['tweet_id'])
+        retweet_id = int(retweet_data['retweet_data']['tweet_id'])
         retweetSource = db_session.query(
             twitter_models.TwitterSource
         ).filter(
@@ -345,7 +344,6 @@ def insert_tweet_data(tweet_data):
     if not isinstance(tweet_data, dict):
         tweet_data = json.loads(tweet_data)
     if tweet_data['is_retweet']:
-        print tweet_data
         insert_retweet_data(tweet_data)
     else:
         insert_non_retweet_data(tweet_data)

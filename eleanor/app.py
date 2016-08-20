@@ -8,7 +8,6 @@ from eleanor.clients.postgres import utils as pg_utils
 
 logger = get_logger(__name__)
 
-
 web_app = Flask(__name__)
 
 
