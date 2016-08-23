@@ -1,11 +1,11 @@
 """Utilities for the eleanor service"""
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dateutil.parser import parse as date_parse
 
-from sqlalchemy import distinct, desc
+from sqlalchemy import distinct, desc, and_
 from sqlalchemy.exc import IntegrityError
 
 from eleanor.utils import get_logger
@@ -347,3 +347,31 @@ def insert_tweet_data(tweet_data):
         insert_retweet_data(tweet_data)
     else:
         insert_non_retweet_data(tweet_data)
+
+
+def search_count_of_user_tweets_on_day(username, date, search_term):
+    """When given a username, datetime, and search_term return the number of
+    times search term was tweeted by username on the day of datetime"""
+    return_data = {}
+    date = date_parse(date)
+    start = datetime(year=date.year, month=date.month, day=date.day)
+    end = start + timedelta(days=1)
+    with GetDBSession() as db_session:
+        user_query = db_session.query(
+            twitter_models.TwitterSource
+            ).filter(
+                twitter_models.TwitterSource.tweeter_user_name == username
+            ).join(
+                twitter_models.TwitterSource.text_source, aliased=True
+            ).filter(
+                and_(
+                    and_(
+                        models.TextSource.time_posted > start,
+                        models.TextSource.time_posted < end
+                    ),
+                    models.TextSource.written_text.contains(search_term)
+                )
+            )
+
+        return_data[username] = {search_term: user_query.count()}
+    return return_data

@@ -107,5 +107,32 @@ def get_last_tweet_id(username):
         return resp
 
 
+@web_app.route('/stats/tweets-on-date', strict_slashes=False)
+def search_twitter_data():
+    """When given twitter usernames, a date, and a search term return
+    count"""
+    return_data = None
+    for k, v in request.headers.items():
+        if k.lower() == 'content-type':
+            if v.lower() == 'application/json':
+                twitter_user = request.json['twitter_username']
+                search_date = request.json['search_date']
+                search_term = request.json['search_term']
+                return_data = pg_utils.search_count_of_user_tweets_on_day(
+                    twitter_user, search_date, search_term
+                )
+    if return_data is None:
+        resp = Response(
+            status=204
+        )
+        return resp
+    else:
+        resp = Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps(return_data)
+        )
+        return resp
+
 if __name__ == '__main__':
     web_app.run()
