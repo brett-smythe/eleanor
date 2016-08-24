@@ -3,7 +3,7 @@ import logging
 import logging.config
 import time
 
-dev = True
+dev = False
 
 
 def get_logger(module_name):
