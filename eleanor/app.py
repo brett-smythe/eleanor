@@ -107,7 +107,7 @@ def get_last_tweet_id(username):
         return resp
 
 
-@web_app.route('/stats/tweets-on-date', strict_slashes=False)
+@web_app.route('/stats/tweets-on-date', methods=['POST'], strict_slashes=False)
 def search_twitter_data():
     """When given twitter usernames, a date, and a search term return
     count"""
