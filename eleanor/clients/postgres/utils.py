@@ -373,5 +373,9 @@ def search_count_of_user_tweets_on_day(username, date, search_term):
                 )
             )
 
-        return_data[username] = {search_term: user_query.count()}
+        # need to add datetime in response data
+        return_data[username] = {
+            search_term: user_query.count(),
+            'date': start.strftime('%Y-%m-%d')
+        }
     return return_data
