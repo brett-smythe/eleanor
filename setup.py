@@ -11,7 +11,7 @@ with open('requirements.txt') as inf:
 
 setup(
     name='eleanor',
-    version='0.5.4.3',
+    version='0.5.4.4',
     description='API for accumulated social data',
     author='Brett Smythe',
     author_email='smythebrett@gmail.com',

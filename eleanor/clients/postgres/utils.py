@@ -13,9 +13,6 @@ from eleanor.models import models, twitter_models
 from eleanor.clients.postgres.client import GetDBSession
 
 
-logger = get_logger(__name__)
-
-
 def get_string_from_datetime(dt):
     """When given a datetime object return a ISO 8601 string representation of
     the datetime
@@ -98,6 +95,7 @@ def insert_text_data(data_source, source_url, text, time_posted, session):
     time_posted -- either a datetime object or a datetime string
     session -- active db session
     """
+    logger = get_logger(__name__)
     if not isinstance(time_posted, datetime):
         time_posted = date_parse(time_posted)
 
@@ -118,6 +116,7 @@ def get_tracked_twitter_tl_users():
     """
     Pull the list of twitter users that is being polled by the interns
     """
+    logger = get_logger(__name__)
     logger.debug('Getting listing of tracked twitter users')
     tracked_users = []
     with GetDBSession() as db_session:
@@ -137,6 +136,7 @@ def begin_tracking_twitter_user(username):
     username -- Twitter username/screen_name to be added. For example to add
     username '@NASA' to be polled: add_tracked_twitter_tl_user('NASA')
     """
+    logger = get_logger(__name__)
     new_user = twitter_models.PolledTimelineUsers(user_name=username)
     with GetDBSession() as db_session:
         db_session.add(new_user)
@@ -155,6 +155,7 @@ def is_twitter_user_in_interns(screen_name):
     Arguments:
     screen_name -- Twitter user_name/screen_name to check for.
     """
+    logger = get_logger(__name__)
     screen_names = []
     with GetDBSession() as db_session:
         distinct_screen_names = db_session.query(
@@ -179,6 +180,7 @@ def last_twitter_user_entry_id(screen_name):
     Arguments:
     screen_name -- Twitter user_name/screen_name to check for.
     """
+    logger = get_logger(__name__)
     with GetDBSession() as db_session:
         if is_twitter_user_in_interns(screen_name):
             # Check to make sure it's not a retweet
@@ -236,6 +238,7 @@ def add_user_mentions(tweet_data, tweetModel):
 
 def insert_retweet_data(retweet_data):
     """Inserts retweet data"""
+    logger = get_logger(__name__)
     insert_tweet_data(retweet_data['retweet_data'])
     with GetDBSession() as db_session:
         retweet_id = int(retweet_data['retweet_data']['tweet_id'])
@@ -289,6 +292,7 @@ def insert_retweet_data(retweet_data):
 
 def insert_non_retweet_data(tweet_data):
     """Takes the passed in JSON tweet_data and inserts into the database"""
+    logger = get_logger(__name__)
     logger.debug('Inserting tweet data')
     with GetDBSession() as db_session:
         tweetTextModel = insert_text_data(
@@ -373,7 +377,6 @@ def search_count_of_user_tweets_on_day(username, date, search_term):
                 )
             )
 
-        # need to add datetime in response data
         return_data[username] = {
             search_term: user_query.count(),
             'date': start.strftime('%Y-%m-%d')

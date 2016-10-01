@@ -5,15 +5,13 @@ from utils import get_logger
 
 from eleanor.clients.postgres import utils as pg_utils
 
-
-logger = get_logger(__name__)
-
 web_app = Flask(__name__)
 
 
 @web_app.route('/')
 def hello():
     """Temp test endpoint to verify service is running"""
+    logger = get_logger(__name__)
     logger.debug('Hitting the test endpoint')
     return 'Ello there'
 
@@ -23,14 +21,13 @@ def hello():
 )
 def tracked_twitter_tl_user():
     """Get or add new twitter users to be polled"""
+    logger = get_logger(__name__)
     if request.method == 'GET':
         logger.debug('Returning tracked twitter timeline users')
         tracked_users = pg_utils.get_tracked_twitter_tl_users()
         return_data = {
-            'twitter_usernames': []
+            'twitter_usernames': tracked_users
         }
-        return_data['twitter_usernames'] = tracked_users
-
         resp = Response(
             status=200,
             mimetype='application/json',
@@ -56,6 +53,8 @@ def tracked_twitter_tl_user():
                     for username in request_users:
                         if not pg_utils.is_twitter_user_in_interns(username):
                             pg_utils.begin_tracking_twitter_user(username)
+        resp = Response(status=200)
+        return resp
 
 
 @web_app.route('/add-tweet-data', methods=['POST'], strict_slashes=False)
@@ -109,7 +108,7 @@ def get_last_tweet_id(username):
 
 @web_app.route('/stats/tweets-on-date', methods=['POST'], strict_slashes=False)
 def search_twitter_data():
-    """When given twitter usernames, a date, and a search term return
+    """When given twitter username, a date, and a search term return
     count"""
     return_data = None
     for k, v in request.headers.items():

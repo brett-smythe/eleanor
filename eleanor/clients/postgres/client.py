@@ -7,30 +7,34 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
-config = ConfigParser.RawConfigParser()
-if getpass.getuser() != 'eleanor':
-    conf_file = '/home/brett/dev/eleanor/eleanor/eleanor_local_auth.cfg'
-else:
-    conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
-config.read(conf_file)
+def get_db_engine():
+    """Get the sqlalchemy db engine"""
+    config = ConfigParser.RawConfigParser()
+    if getpass.getuser() != 'eleanor':
+        conf_file = '/home/brett/dev/eleanor/eleanor/eleanor_local_auth.cfg'
+    else:
+        conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
+    config.read(conf_file)
 
-pg_user_name = config.get('Postgres', 'pg_uname')
-pg_password = config.get('Postgres', 'pg_pwd')
-pg_ip_address = config.get('Postgres', 'pg_ip_address')
-pg_db_name = config.get('Postgres', 'pg_db_name')
+    pg_user_name = config.get('Postgres', 'pg_uname')
+    pg_password = config.get('Postgres', 'pg_pwd')
+    pg_ip_address = config.get('Postgres', 'pg_ip_address')
+    pg_db_name = config.get('Postgres', 'pg_db_name')
 
-engine = create_engine(
-    'postgresql://{0}:{1}@{2}/{3}'.format(
-        pg_user_name, pg_password, pg_ip_address, pg_db_name
-    ),
-    pool_size=25
-)
+    engine = create_engine(
+        'postgresql://{0}:{1}@{2}/{3}'.format(
+            pg_user_name, pg_password, pg_ip_address, pg_db_name
+        ),
+        pool_size=25
+    )
+    return engine
 
 
 class GetDBSession(object):
     """This class acts as a context manager for postgres connections"""
 
     def __init__(self):
+        engine = get_db_engine
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
