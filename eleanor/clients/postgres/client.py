@@ -34,7 +34,7 @@ class GetDBSession(object):
     """This class acts as a context manager for postgres connections"""
 
     def __init__(self):
-        engine = get_db_engine
+        engine = get_db_engine()
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
