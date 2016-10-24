@@ -1,4 +1,5 @@
 """Handles eleanor's connection to postgres"""
+import os
 import getpass
 
 import ConfigParser
@@ -11,7 +12,11 @@ def get_db_engine():
     """Get the sqlalchemy db engine"""
     config = ConfigParser.RawConfigParser()
     if getpass.getuser() != 'eleanor':
-        conf_file = '/home/brett/dev/eleanor/eleanor/eleanor_local_auth.cfg'
+        path_to_file = os.path.abspath(os.path.dirname(__file__))
+        path_to_conf_file = '/'.join(path_to_file.split('/')[:-2])
+        conf_file = '{0}/{1}'.format(
+            path_to_conf_file, 'eleanor_local_auth.cfg'
+        )
     else:
         conf_file = '/etc/opt/eleanor/eleanor_auth.cfg'
     config.read(conf_file)
