@@ -29,5 +29,5 @@ def get_logger(module_name):
     formatter.converter = time.gmtime
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-
+    logger.propagate = False
     return logger
