@@ -22,5 +22,6 @@ formatter = logging.Formatter(
 )
 formatter.converter = time.gmtime
 handler.setFormatter(formatter)
-eleanor_logger.addHandler(handler)
+if not len(eleanor_logger.handlers):
+    eleanor_logger.addHandler(handler)
 eleanor_logger.propagate = False
