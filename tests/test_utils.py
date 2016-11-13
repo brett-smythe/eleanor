@@ -15,5 +15,5 @@ class EleanorUtilsCases(unittest.TestCase):
     def test_get_eleanor_logger(self, mock_logging):
         """Test getting eleanor logger"""
         # pylint: disable=no-self-use
-        eleanor_utils.get_logger(__name__)
-        mock_logging.getLogger.assert_called_with(__name__)
+        eleanor_utils.get_logger()
+        mock_logging.getLogger.assert_called()

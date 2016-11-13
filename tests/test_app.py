@@ -34,10 +34,11 @@ class EleanorAppCases(unittest.TestCase):
             return func_wrapper
         return decorator
 
-    @mock.patch('eleanor.app.get_logger')
+    @mock.patch('eleanor.app.eleanor_logger')
     @mock.patch('eleanor.app.pg_utils')
     @create_test_context('/twitter-tl-users', 'GET')
-    def test_tracked_twitter_tl_users_get(self, mock_pg_utils, mock_get_log):
+    def test_tracked_twitter_tl_users_get(self, mock_pg_utils,
+                                          mock_eleanor_logger):
         """Test getting the list of tracked twitter users"""
         fake_users = ['NASA', 'JossWhedon']
         response_data = {'twitter_usernames': fake_users}
@@ -46,7 +47,7 @@ class EleanorAppCases(unittest.TestCase):
             mimetype='application/json',
             response=json.dumps(response_data)
         )
-        mock_get_log.return_value = mock.Mock(spec=RootLogger)
+        mock_eleanor_logger.return_value = mock.Mock(spec=RootLogger)
         mock_pg_utils.get_tracked_twitter_tl_users.return_value = fake_users
         return_resp = eleanor.app.tracked_twitter_tl_user()
         self.assertEqual(
@@ -60,14 +61,14 @@ class EleanorAppCases(unittest.TestCase):
         )
 
     @mock.patch('eleanor.app.request')
-    @mock.patch('eleanor.app.get_logger')
+    @mock.patch('eleanor.app.eleanor_logger')
     @mock.patch('eleanor.app.pg_utils')
     @create_test_context('/twitter-tl-users', 'POST')
     def test_tracked_twitter_tl_users_post(self, mock_pg_utils,
-                                           mock_get_logger, mock_request):
+                                           mock_eleanor_logger, mock_request):
         """Test adding a list of twitter users to track"""
         fake_users = ['SteveRogers', 'JossWhedon']
-        mock_get_logger.return_value = mock.Mock(spec=RootLogger)
+        mock_eleanor_logger.return_value = mock.Mock(spec=RootLogger)
         mock_request.method = 'POST'
         mock_request.headers = {'content-type': 'application/json'}
         mock_request.json = {'twitter_usernames': fake_users}
