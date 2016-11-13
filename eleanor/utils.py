@@ -4,8 +4,8 @@ import logging
 import logging.config
 import time
 
-logger = logging.getLogger('eleanor')
-logger.setLevel(logging.DEBUG)
+eleanor_logger = logging.getLogger('eleanor')
+eleanor_logger.setLevel(logging.DEBUG)
 if 'RUN_ENV' in os.environ:
     if os.environ['RUN_ENV'] == 'production':
         handler = logging.handlers.TimedRotatingFileHandler(
@@ -22,7 +22,5 @@ formatter = logging.Formatter(
 )
 formatter.converter = time.gmtime
 handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.propagate = False
-
-eleanor_logger = logger
+eleanor_logger.addHandler(handler)
+eleanor_logger.propagate = False
