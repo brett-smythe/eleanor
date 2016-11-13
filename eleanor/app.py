@@ -1,7 +1,7 @@
 """Web app module for eleanor service"""
 from flask import Flask, json, request, Response
 
-from utils import get_logger
+from utils import eleanor_logger
 
 from eleanor.clients.postgres import utils as pg_utils
 
@@ -11,8 +11,7 @@ web_app = Flask(__name__)
 @web_app.route('/')
 def hello():
     """Temp test endpoint to verify service is running"""
-    logger = get_logger(__name__)
-    logger.debug('Hitting the test endpoint')
+    eleanor_logger.debug('Hitting the test endpoint')
     return 'Ello there'
 
 
@@ -21,9 +20,8 @@ def hello():
 )
 def tracked_twitter_tl_user():
     """Get or add new twitter users to be polled"""
-    logger = get_logger(__name__)
     if request.method == 'GET':
-        logger.debug('Returning tracked twitter timeline users')
+        eleanor_logger.debug('Returning tracked twitter timeline users')
         tracked_users = pg_utils.get_tracked_twitter_tl_users()
         return_data = {
             'twitter_usernames': tracked_users
@@ -35,18 +33,20 @@ def tracked_twitter_tl_user():
         )
         return resp
     elif request.method == 'POST':
-        logger.debug('twitter-tl-users POST headers are: %s', request.headers)
-        logger.debug(
+        eleanor_logger.debug(
+            'twitter-tl-users POST headers are: %s', request.headers
+        )
+        eleanor_logger.debug(
             'twitter-tl-users POST request data: %s', request
         )
-        logger.debug(
+        eleanor_logger.debug(
             'twitter-tl-users POST json: %s', request.json
         )
         for k, v in request.headers.items():
             if k.lower() == 'content-type':
                 if v.lower() == 'application/json':
                     request_users = request.json['twitter_usernames']
-                    logger.info(
+                    eleanor_logger.info(
                         'Adding users: %s to tracked twitter timline users',
                         request_users
                     )

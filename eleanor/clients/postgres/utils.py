@@ -8,7 +8,7 @@ from dateutil.parser import parse as date_parse
 from sqlalchemy import distinct, desc, and_
 from sqlalchemy.exc import IntegrityError
 
-from eleanor.utils import get_logger
+from eleanor.utils import eleanor_logger
 from eleanor.models import models, twitter_models
 from eleanor.clients.postgres.client import GetDBSession
 
@@ -95,11 +95,10 @@ def insert_text_data(data_source, source_url, text, time_posted, session):
     time_posted -- either a datetime object or a datetime string
     session -- active db session
     """
-    logger = get_logger(__name__)
     if not isinstance(time_posted, datetime):
         time_posted = date_parse(time_posted)
 
-    logger.debug('Inserting text data into postgres')
+    eleanor_logger.debug('Inserting text data into postgres')
 
     TextModel = models.TextSource(
         source_key=data_source,
@@ -116,8 +115,7 @@ def get_tracked_twitter_tl_users():
     """
     Pull the list of twitter users that is being polled by the interns
     """
-    logger = get_logger(__name__)
-    logger.debug('Getting listing of tracked twitter users')
+    eleanor_logger.debug('Getting listing of tracked twitter users')
     tracked_users = []
     with GetDBSession() as db_session:
         tracked_users_query = db_session.query(
@@ -136,12 +134,11 @@ def begin_tracking_twitter_user(username):
     username -- Twitter username/screen_name to be added. For example to add
     username '@NASA' to be polled: add_tracked_twitter_tl_user('NASA')
     """
-    logger = get_logger(__name__)
     new_user = twitter_models.PolledTimelineUsers(user_name=username)
     with GetDBSession() as db_session:
         db_session.add(new_user)
         db_session.commit()
-    logger.debug('Adding twitter user %s to be tracked', username)
+    eleanor_logger.debug('Adding twitter user %s to be tracked', username)
 
 
 def is_twitter_user_in_interns(screen_name):
@@ -155,7 +152,6 @@ def is_twitter_user_in_interns(screen_name):
     Arguments:
     screen_name -- Twitter user_name/screen_name to check for.
     """
-    logger = get_logger(__name__)
     screen_names = []
     with GetDBSession() as db_session:
         distinct_screen_names = db_session.query(
@@ -164,7 +160,7 @@ def is_twitter_user_in_interns(screen_name):
     for sn in distinct_screen_names:
         screen_names.append(sn[0])
     is_user_tracked = screen_name in screen_names
-    logger.debug(
+    eleanor_logger.debug(
         'Twitter username %s is currently being tracked by interns is: %s',
         screen_name,
         is_user_tracked
@@ -180,7 +176,6 @@ def last_twitter_user_entry_id(screen_name):
     Arguments:
     screen_name -- Twitter user_name/screen_name to check for.
     """
-    logger = get_logger(__name__)
     with GetDBSession() as db_session:
         if is_twitter_user_in_interns(screen_name):
             # Check to make sure it's not a retweet
@@ -193,7 +188,7 @@ def last_twitter_user_entry_id(screen_name):
                 desc(twitter_models.TwitterSource.tweet_id)
             ).first().tweet_id
 
-            logger.debug(
+            eleanor_logger.debug(
                 'Last tweet id from twitter user %s is %s',
                 screen_name,
                 query
@@ -238,7 +233,6 @@ def add_user_mentions(tweet_data, tweetModel):
 
 def insert_retweet_data(retweet_data):
     """Inserts retweet data"""
-    logger = get_logger(__name__)
     insert_tweet_data(retweet_data['retweet_data'])
     with GetDBSession() as db_session:
         retweet_id = int(retweet_data['retweet_data']['tweet_id'])
@@ -268,11 +262,11 @@ def insert_retweet_data(retweet_data):
         except IntegrityError as e:
             if 'duplicate key value' in e.message:
                 # We've already captured this so, moving on
-                logger.info(
+                eleanor_logger.info(
                     'Duplicate tweet is already in the database, skipping'
                 )
             else:
-                logger.critical(
+                eleanor_logger.critical(
                     (
                         'A database error occurred while attempting to '
                         'insert tweet %s'
@@ -281,7 +275,7 @@ def insert_retweet_data(retweet_data):
                 )
         except Exception as e:
             # Something real bad happened
-            logger.critical(
+            eleanor_logger.critical(
                 (
                     'An error has occurred while inserting a tweet into '
                     'the database %s'
@@ -292,8 +286,7 @@ def insert_retweet_data(retweet_data):
 
 def insert_non_retweet_data(tweet_data):
     """Takes the passed in JSON tweet_data and inserts into the database"""
-    logger = get_logger(__name__)
-    logger.debug('Inserting tweet data')
+    eleanor_logger.debug('Inserting tweet data')
     with GetDBSession() as db_session:
         tweetTextModel = insert_text_data(
             models.AllowedSources.twitter.name,
@@ -319,11 +312,11 @@ def insert_non_retweet_data(tweet_data):
         except IntegrityError as e:
             if 'duplicate key value' in e.message:
                 # We've already captured this so, moving on
-                logger.info(
+                eleanor_logger.info(
                     'Duplicate tweet is already in the database, skipping'
                 )
             else:
-                logger.critical(
+                eleanor_logger.critical(
                     (
                         'A database error occurred while attempting '
                         'to insert tweet %s'
@@ -332,7 +325,7 @@ def insert_non_retweet_data(tweet_data):
                 )
         except Exception as e:
             # Something real bad happened
-            logger.critical(
+            eleanor_logger.critical(
                 (
                     'An error has occurred while inserting a tweet into '
                     'the database %s'

@@ -5,12 +5,12 @@ import logging.config
 import time
 
 
-def get_logger(module_name):
+def get_logger():
     """Get a logger with created with values from settings/logging.conf and
     using time.gmtime
     """
 
-    logger = logging.getLogger(module_name)
+    logger = logging.getLogger('eleanor')
     logger.setLevel(logging.DEBUG)
     if 'RUN_ENV' in os.environ:
         if os.environ['RUN_ENV'] == 'production':
@@ -31,3 +31,5 @@ def get_logger(module_name):
     logger.addHandler(handler)
     logger.propagate = False
     return logger
+
+eleanor_logger = get_logger()
