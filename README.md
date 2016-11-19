@@ -2,6 +2,8 @@
 
 Web service layer over a database for storing and retrieving text from various sources. Currently twitter is the only data source with implemented models however it can be easily extended to others.
 
+To see how this fits in with the other repos please see [Aquatic Services Wiki](https://github.com/brett-smythe/ansible_configs/wiki)
+
 ## Install
 Recommended to install and run in a virtualenv
 
